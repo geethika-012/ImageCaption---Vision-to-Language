@@ -1,0 +1,20 @@
+# Ignore virtual environments
+venv311/
+
+# Ignore model checkpoints and large binaries
+*.tar
+*.pth
+*.pt
+*.lib
+*.dll
+*.zip
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Ignore Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Logs
+*.log
