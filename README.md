@@ -1,80 +1,90 @@
-This project implements an image captioning system that generates natural language descriptions for input images using deep learning. It leverages a ResNet-101 encoder, an LSTM decoder with attention, and beam search decoding to produce high-quality captions.
+ ImageCaption - Vision to Language
+
+**ImageCaption** is a deep learning project that transforms visual data into natural language descriptions. This model is capable of generating human-like captions for images using a Convolutional Neural Network (CNN) and Recurrent Neural Network (RNN) with attention mechanisms.
+
 
  Overview
-Image captioning is the task of generating a textual description from an image. It combines computer vision and natural language processing techniques. This project uses a CNN-RNN architecture:
 
-Encoder: A pretrained CNN (ResNet-101) extracts image features.
+This project implements an image captioning pipeline trained on the MS-COCO dataset. It takes an image as input and generates a descriptive sentence. It combines computer vision and natural language processing, bridging the gap between visual understanding and language.
 
-Decoder: An LSTM with attention generates captions from the encoded features.
+Key features:
+- Image encoder using **ResNet101**.
+- Decoder with **LSTM + Attention** mechanism.
+- Beam Search for generating high-quality captions.
+- Easy-to-run inference script with custom images.
 
-Beam Search: Improves caption quality by exploring multiple possible word sequences.
+ Demo
+Example: Input Image: (dog.jpg)
+Generated Caption: "a group of dogs standing on top of a dirt field"
 
- Model Architecture
-Encoder: Modified ResNet-101 (without final classification layer)
+You can try this on your own images by following the usage steps below.
 
-Decoder: LSTM-based decoder with:
+ Project Structure :
+ImageCaption---Vision-to-Language/
+├── caption.py # Main inference script
+├── models.py # Encoder and Decoder model classes
+├── utils/ # Utility functions and image processing
+├── data/ # Folder to place test images
+├── checkpoints/ # Pretrained .pth.tar model files
+├── word_maps/ # Word map (JSON file for vocabulary)
+├── README.md # This file
 
-Bahdanau-style attention
 
-Gating mechanism (f_beta) to modulate attention
 
-Embedding layer and fully connected output
+Setup Instructions :
 
-Beam Search: Maintains top-k probable sequences during generation
-
-Setup Instructions
 1. Clone the repository
-git clone https://github.com/<geethika-012>/imagecaption.git
-cd imagecaption
-2. Create a virtual environment
+git clone https://github.com/geethika-012/ImageCaption---Vision-to-Language.git
+cd ImageCaption---Vision-to-Language
+
+2. Create a virtual environment (optional but recommended)
+bash
+Copy
+Edit
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+
 3. Install dependencies
 pip install -r requirements.txt
+If a requirements.txt file is missing, install the essentials:
+pip install torch torchvision pillow
 
+Usage
+1. Download the pretrained model
+Due to GitHub size limits, the pretrained .pth.tar file is not uploaded. You can download it from this external source:
+https://drive.google.com/file/d/1dOeLBwExkqD-cCQLRuaKqRkTY9JABEPZ/view?usp=drive_link
+Place the file in the root directory of the project.
 
-File Structure
-
-imagecaption/
-│
-├── models.py              # Encoder & Decoder models
-├── caption.py             # Inference script
-├── utils/                 # (Optional) Utilities
-├── img/                   # Folder to store input images
-├── BEST_checkpoint_*.pth.tar  # Trained model checkpoint
-├── WORDMAP_*.json         # Word-to-index map
-└── README.md              # Project readme
-Run Inference
-Make sure you have:
-
-A sample image (e.g., img/dog.jpg)
-
-A trained model (.pth.tar)
-
-A word map JSON (.json)
-
-Then run:
+2. Run image captioning
 python caption.py \
   --img img/dog.jpg \
   --model BEST_checkpoint_coco_5_cap_per_img_5_min_word_freq.pth.tar \
   --word_map WORDMAP_coco_5_cap_per_img_5_min_word_freq.json
- Output
+
+Model Architecture
+Encoder
+Uses pretrained ResNet-101 from torchvision.
+Extracts feature vectors from the image.
+The final convolutional layer's output is flattened and passed to the decoder.
+
+Decoder with Attention
+Embedding layer followed by LSTM-based sequence decoder.
+Bahdanau-style attention mechanism focuses on relevant parts of the image for each word prediction.
+Outputs tokens one at a time until <end> is reached.
+
+Beam Search
+Beam size configurable with --beam_size.
+Maintains multiple hypotheses while decoding, improving caption quality.
+
+Limitations
+The model is trained on MS-COCO; it might not generalize well to very different domains.
+Struggles with abstract objects or rare scenarios.
+Generated captions may be grammatically correct but semantically inaccurate in rare cases.
 
 
-Example output:
-
-==================================================
-GENERATED CAPTION:
-a group of dogs standing on top of a dirt field
-==================================================
 
 
-Resources Used
-PyTorch
-
-TorchVision
-
-Microsoft COCO Dataset (for pretraining)
-
-ResNet-101 (ImageNet pretrained weights)
 
